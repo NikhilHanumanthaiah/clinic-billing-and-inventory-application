@@ -19,6 +19,12 @@ class BillDTO(BaseModel):
     patient_name: str
     patient_age: int
     bill_items: List[BillItemDTO]
+    total_amount: Optional[float] = None
+
+    class Config:
+        from_attributes = True
+
+
 
     class Config:
         from_attributes = True

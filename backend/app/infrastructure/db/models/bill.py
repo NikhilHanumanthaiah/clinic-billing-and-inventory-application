@@ -9,6 +9,7 @@ class Bill(Base):
     id = Column(Integer, primary_key=True, index=True)
     patient_name = Column(String)
     patient_age = Column(Integer)
+    total_amount = Column(Float)
 
     items = relationship("BillItem", back_populates="bill")
 

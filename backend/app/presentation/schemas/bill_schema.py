@@ -11,3 +11,13 @@ class BillCreate(BaseModel):
     patient_name: str
     patient_age: int
     items: List[BillItemCreate]
+
+class Bill(BaseModel):
+    id: int
+    patient_name: str
+    patient_age: int
+    items: List[BillItemCreate]
+    total_amount: float
+
+    class Config:
+        from_attributes = True

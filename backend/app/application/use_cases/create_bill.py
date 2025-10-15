@@ -13,21 +13,25 @@ class CreateBill:
 
     def execute(self, patient_name: str, patient_age: int, items: List[dict]) -> BillDTO:
         bill_items = []
+        total_amount = 0.0
         for item in items:
             medicine = self.medicine_repository.get_by_id(item['medicine_id'])
             if not medicine or medicine.stock < item['quantity']:
                 raise Exception('Insufficient stock')
+
+            price_per_unit = item.get('price_per_unit', medicine.price_per_unit)
+            total_amount += price_per_unit * item['quantity']
 
             bill_items.append(BillItem(
                 id=None,
                 bill_id=None,
                 medicine_id=item['medicine_id'],
                 quantity=item['quantity'],
-                price_per_unit=item.get('price_per_unit', medicine.price_per_unit),
+                price_per_unit=price_per_unit,
                 medicine=medicine
             ))
 
-        bill = Bill(id=None, patient_name=patient_name, patient_age=patient_age, bill_items=bill_items)
+        bill = Bill(id=None, patient_name=patient_name, patient_age=patient_age, bill_items=bill_items, total_amount=total_amount)
         created_bill = self.bill_repository.create(bill)
 
         for item in created_bill.bill_items:
@@ -42,6 +46,7 @@ class CreateBill:
             id=bill.id,
             patient_name=bill.patient_name,
             patient_age=bill.patient_age,
+            total_amount=bill.total_amount,
             bill_items=[self._to_bill_item_dto(i) for i in bill.bill_items]
         )
 

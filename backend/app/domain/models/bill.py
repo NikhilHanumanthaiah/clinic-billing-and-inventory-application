@@ -18,3 +18,4 @@ class Bill:
     patient_name: str
     patient_age: int
     bill_items: List[BillItem]
+    total_amount: float = 0.0

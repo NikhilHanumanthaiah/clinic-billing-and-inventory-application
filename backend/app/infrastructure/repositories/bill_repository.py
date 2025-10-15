@@ -20,7 +20,7 @@ class BillRepositoryImpl(BillRepository):
         return self._to_domain_bill(bill) if bill else None
 
     def create(self, bill: DomainBill) -> DomainBill:
-        db_bill = DbBill(patient_name=bill.patient_name, patient_age=bill.patient_age)
+        db_bill = DbBill(patient_name=bill.patient_name, patient_age=bill.patient_age, total_amount=bill.total_amount)
         self.session.add(db_bill)
         self.session.commit()
         self.session.refresh(db_bill)
@@ -44,6 +44,7 @@ class BillRepositoryImpl(BillRepository):
             id=bill.id,
             patient_name=bill.patient_name,
             patient_age=bill.patient_age,
+            total_amount=bill.total_amount,
             bill_items=[self._to_domain_bill_item(i) for i in bill.items]
         )
 
