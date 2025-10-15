@@ -2,6 +2,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
+import Table from '../components/Table';
+import Button from '../components/Button';
 
 const fetchBills = async () => {
     const response = await api.get('/bills');
@@ -19,30 +21,34 @@ function BillsPage() {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">Bills</h2>
-                <Link to="/create-bill" className="bg-blue-500 text-white px-4 py-2 rounded">Create Bill</Link>
+            <div className="flex justify-between items-center mb-6">
+                <div>
+                    <h2 className="text-3xl font-bold text-slate-800">Bills</h2>
+                    <p className="text-slate-600">Patient invoices and summaries</p>
+                </div>
+                <Link to="/create-bill"><Button variant="primary">+ Create Bill</Button></Link>
             </div>
-            <table className="table-auto w-full">
-                <thead>
-                    <tr>
-                        <th className="px-4 py-2">Patient Name</th>
-                        <th className="px-4 py-2">Patient Age</th>
-                        <th className="px-4 py-2">Total Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {bills.map((bill: any) => (
-                        <tr key={bill.id}>
-                            <td className="border px-4 py-2">{bill.patient_name}</td>
-                            <td className="border px-4 py-2">{bill.patient_age}</td>
-                            <td className="border px-4 py-2">
-                                {bill.bill_items.reduce((acc: number, item: any) => acc + item.price_per_unit * item.quantity, 0)}
-                            </td>
+
+            <div className="bg-white shadow-md rounded-lg">
+                <Table>
+                    <thead className="bg-slate-50">
+                        <tr>
+                            <th className="text-left px-6 py-3 text-sm font-semibold text-slate-600 uppercase tracking-wider">Patient</th>
+                            <th className="text-right px-6 py-3 text-sm font-semibold text-slate-600 uppercase tracking-wider">Age</th>
+                            <th className="text-right px-6 py-3 text-sm font-semibold text-slate-600 uppercase tracking-wider">Total</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="divide-y divide-slate-200">
+                        {bills.map((bill: any) => (
+                            <tr key={bill.id} className="hover:bg-slate-50">
+                                <td className="px-6 py-4 whitespace-nowrap">{bill.patient_name}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-right">{bill.patient_age}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-right">₹{bill.bill_items.reduce((acc: number, item: any) => acc + item.price_per_unit * item.quantity, 0)}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            </div>
         </div>
     );
 }
